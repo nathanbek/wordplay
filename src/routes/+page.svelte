@@ -1,24 +1,24 @@
 <script lang="ts">
-    import Header from '@components/app/Header.svelte';
-    import BigLink from '../components/app/BigLink.svelte';
-    import Background from '../components/app/Background.svelte';
-    import { locales } from '../db/Database';
-    import Writing from '../components/app/Writing.svelte';
-    import MarkupHtmlView from '../components/concepts/MarkupHTMLView.svelte';
-    import Lead from '@components/app/Lead.svelte';
-    import Emoji from '@components/app/Emoji.svelte';
     import Action from '@components/app/Action.svelte';
+    import Emoji from '@components/app/Emoji.svelte';
+    import Header from '@components/app/Header.svelte';
+    import Lead from '@components/app/Lead.svelte';
+    import Speech from '@components/lore/Speech.svelte';
+    import { getUser } from '@components/project/Contexts';
     import {
         DOCUMENTATION_SYMBOL,
         EDIT_SYMBOL,
         STAGE_SYMBOL,
     } from '@parser/Symbols';
-    import Beta from './Beta.svelte';
-    import Speech from '@components/lore/Speech.svelte';
-    import Glyphs from '../lore/Glyphs';
+    import Background from '../components/app/Background.svelte';
+    import BigLink from '../components/app/BigLink.svelte';
+    import Writing from '../components/app/Writing.svelte';
+    import MarkupHtmlView from '../components/concepts/MarkupHTMLView.svelte';
+    import { locales } from '../db/Database';
     import Emotion from '../lore/Emotion';
+    import Glyphs from '../lore/Glyphs';
+    import Beta from './Beta.svelte';
     import Iconified from './Iconified.svelte';
-    import { getUser } from '@components/project/Contexts';
 
     const user = getUser();
 </script>
@@ -167,6 +167,9 @@
             </div>
         </div>
     </div>
+    <div class="contributors-link">
+        <Action href="/contributors">View Contributors</Action>
+    </div>
 </Writing>
 
 <style>
@@ -209,5 +212,10 @@
         gap: calc(2 * var(--wordplay-spacing));
         flex-grow: 1;
         flex-basis: 0;
+    }
+
+    .contributors-link {
+        text-align: center;
+        margin-top: 20px;
     }
 </style>

@@ -1,6 +1,10 @@
-<div class="action">
+<script>
+    export let href = '#';
+</script>
+
+<a class="action" {href}>
     <slot />
-</div>
+</a>
 
 <style>
     .action {
@@ -11,5 +15,7 @@
         border-radius: var(--wordplay-border-radius);
         background: var(--wordplay-background);
         flex: 1 0 auto;
+        text-decoration: none;
+        color: inherit;
     }
 </style>

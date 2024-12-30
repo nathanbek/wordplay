@@ -1,14 +1,18 @@
 <script lang="ts">
     import Sym from '@nodes/Sym';
-    import type Project from '@models/Project';
+    import type Project from '@db/projects/Project';
     import Token from '@nodes/Token';
     import { WordsRegEx } from '@parser/Tokenizer';
     import TokenTextEditor from './TokenEditor.svelte';
 
-    export let words: Token;
-    export let project: Project;
-    export let text: string;
-    export let placeholder: string;
+    interface Props {
+        words: Token;
+        project: Project;
+        text: string;
+        placeholder: string;
+    }
+
+    let { words, project, text, placeholder }: Props = $props();
 </script>
 
 <TokenTextEditor

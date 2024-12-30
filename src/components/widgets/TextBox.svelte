@@ -1,12 +1,36 @@
 <script lang="ts">
     import { onMount } from 'svelte';
 
-    export let text: string;
-    export let description: string;
-    export let placeholder: string;
-    export let done: (text: string) => void;
+    interface Props {
+        text: string;
+        description: string;
+        placeholder: string;
+        active?: boolean;
+        done?: (text: string) => void;
+        dwelled?: undefined | ((text: string) => void);
+    }
 
-    let view: HTMLTextAreaElement | undefined;
+    let {
+        text = $bindable(),
+        description,
+        placeholder,
+        done = undefined,
+        active = true,
+        dwelled = undefined,
+    }: Props = $props();
+
+    let view: HTMLTextAreaElement | undefined = $state();
+
+    let timeout: NodeJS.Timeout | undefined = undefined;
+
+    function handleInput() {
+        if (dwelled)
+            timeout = setTimeout(() => {
+                if (dwelled) dwelled(text);
+            }, 1000);
+
+        resize();
+    }
 
     function resize() {
         if (view) {
@@ -24,18 +48,23 @@
     {placeholder}
     bind:value={text}
     bind:this={view}
-    on:blur={() => done(text)}
-    on:input={resize}
-/>
+    aria-disabled={!active}
+    rows={1}
+    disabled={!active}
+    onblur={() => (done ? done(text) : undefined)}
+    oninput={handleInput}
+></textarea>
 
 <style>
     textarea {
-        font-family: var(--wordplay-app-font);
-        font-size: var(--wordplay-font-size);
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
         border: none;
         border-left: var(--wordplay-focus-width) solid
             var(--wordplay-inactive-color);
-        padding: var(--wordplay-spacing);
+        padding-left: var(--wordplay-spacing);
         width: 100%;
         resize: none;
         background: var(--wordplay-background);
@@ -45,5 +74,15 @@
     textarea:focus {
         outline: none;
         border-left-color: var(--wordplay-focus-color);
+    }
+
+    textarea::placeholder {
+        font-style: italic;
+        color: var(--wordplay-inactive-color);
+        font-family: var(--wordplay-app-font);
+    }
+
+    textarea[aria-disabled='true'] {
+        background: var(--wordplay-inactive-color);
     }
 </style>

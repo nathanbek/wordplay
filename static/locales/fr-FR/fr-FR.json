@@ -4047,7 +4047,15 @@
             "loading": {
                 "message": "$~Chargement des polices et du texte, merci de patienter !"
             },
-            "home": "$~aller à la page d'accueil"
+            "home": "$~aller à la page d'accueil",
+            "table": {
+                "cell": {
+                    "description": "$~modifier cette cellule",
+                    "placeholder": "$~valeur"
+                },
+                "addcolumn": "$~ajouter une colonne avant cette colonne",
+                "removecolumn": "$~supprimer cette colonne"
+            }
         },
         "tile": {
             "toggle": {
@@ -4064,7 +4072,8 @@
                 "output": "$~scène",
                 "palette": "$~palette",
                 "docs": "$~guide",
-                "source": "$~source"
+                "source": "$~source",
+                "collaborate": "$~collaborer"
             },
             "button": {
                 "collapse": "$~réduire la fenêtre"
@@ -4073,10 +4082,11 @@
         "project": {
             "error": {
                 "unknown": "$~Ce projet n'existe pas ou n'est pas public.",
-                "translate": "$~Il y a eu un problème lors de la traduction de votre projet."
+                "translate": "$~Il y a eu un problème lors de la traduction de votre projet.",
+                "tile": "$~Oups, il y a eu une erreur.",
+                "reset": "$~Tenter de réinitialiser..."
             },
             "button": {
-                "showCollaborators": "$~Afficher la boîte de dialogue des collaborateurs",
                 "removeCollaborator": "$~supprimer un collaborateur",
                 "copy": "$~copier le projet dans le presse-papiers sous forme de texte",
                 "addSource": "$~créer une nouvelle $source",
@@ -4089,7 +4099,15 @@
                 "focusCycle": "$~se concentrer sur la tuile suivante",
                 "unsaved": "$~afficher l'erreur de sauvegarde",
                 "translate": "$~modifier les langues de ce projet et le traduire dans d'autres langues.",
-                "primary": "$~définir comme lieu principal de ce projet"
+                "primary": "$~définir comme lieu principal de ce projet",
+                "share": {
+                    "tip": "$~afficher les options de partage de projet",
+                    "label": "$~partager"
+                },
+                "history": {
+                    "on": "$~afficher le code du projet récent",
+                    "redo": "$~afficher le code du projet actuel"
+                }
             },
             "field": {
                 "name": {
@@ -4138,6 +4156,10 @@
                 "delete": {
                     "header": "$~Supprimer",
                     "explanation": "$~La suppression de cette galerie ne supprimera pas ses projets. La galerie sera supprimée définitivement."
+                },
+                "classes": {
+                    "header": "$~Cours",
+                    "explanation": "$~Classes associées à cette galerie."
                 }
             },
             "confirm": {
@@ -4342,10 +4364,6 @@
                 "header": "$~Partage",
                 "explanation": "$~Contrôlez qui peut modifier et voir ce projet.",
                 "subheader": {
-                    "collaborators": {
-                        "header": "$~Collaborateurs",
-                        "explanation": "$~Les collaborateurs peuvent voir et modifier ce projet. Seuls les propriétaires de projet peuvent modifier les collaborateurs."
-                    },
                     "gallery": {
                         "header": "$~Galerie",
                         "explanation": "$~Ajoutez ce projet dans une galerie aux côtés d'autres créateurs ou créez une galerie sur votre page <projects@://projects>. Si vous ajoutez un projet à une galerie publique, votre projet deviendra public."
@@ -4453,7 +4471,8 @@
                 },
                 "options": {
                     "mic": "$~microphone sélectionné",
-                    "camera": "$~caméra sélectionnée"
+                    "camera": "$~caméra sélectionnée",
+                    "face": "$~police de caractère"
                 }
             },
             "locale": {
@@ -4582,7 +4601,8 @@
                     "contribute": {
                         "label": "$~Contribuer",
                         "subtitle": "$~Aidez-nous à créer Wordplay."
-                    }
+                    },
+                    "teach": "$~Gérer les classes d'étudiants et leurs projets"
                 }
             },
             "learn": {
@@ -4656,10 +4676,8 @@
             },
             "login": {
                 "header": "$~Se connecter",
-                "subtitle": "$~Créez un compte ou connectez-vous pour enregistrer votre travail en ligne",
                 "anonymous": "$~se connecter",
                 "prompt": {
-                    "login": "$~Vos performances sont enregistrées dans ce navigateur, mais pas en ligne. Si c'est votre appareil, ce n'est pas grave ! Si ce n'est pas le cas, d'autres auront accès à vos projets et vous risquez de les perdre. Pour les enregistrer en ligne et les garder privés, connectez-vous ou <create an account@://join> :",
                     "forgot": "$~*Mot de passe oublié ?* Malheureusement, nous ne pouvons pas récupérer votre compte car nous ne collectons pas d'informations de contact.",
                     "email": "$~Avez-vous un compte de messagerie uniquement ? Connectez-vous en soumettant votre adresse e-mail et, si un compte y est associé, nous vous enverrons un e-mail avec un lien de connexion. Les nouveaux comptes de messagerie uniquement ne sont pas pris en charge, afin de préserver la confidentialité.",
                     "enter": "$~Il semble que votre lien de connexion provienne d'un autre navigateur ou appareil. Pouvez-vous saisir à nouveau votre adresse e-mail, juste pour être sûr qu'il s'agit bien de vous ?",
@@ -4675,7 +4693,9 @@
                     "confirm": "$~Vérifiez votre ancienne adresse e-mail pour confirmer votre nouvelle adresse.",
                     "delete": "$~Vous voulez que nous oubliions tout ce que vous avez fait ici ? C'est irréversible.",
                     "reallyDelete": "$~Êtes-vous sûr ? Votre compte et vos paramètres seront immédiatement supprimés et vos projets seront programmés pour suppression. Les collaborateurs de vos projets perdront immédiatement l'accès à ces derniers. Saisissez votre adresse e-mail ou votre nom d'utilisateur pour confirmer que c'est bien ce que vous souhaitez.",
-                    "name": "$~Choisissezunemojipourvousreprésenterauprèsdesautres."
+                    "name": "$~Choisissezunemojipourvousreprésenterauprèsdesautres.",
+                    "login": "$~Connectez-vous pour sauvegarder vos projets, collaborer et partager :",
+                    "join": "$~Ou, <créez un compte@://join> pour commencer."
                 },
                 "error": {
                     "expired": "$~Ce lien a expiré.",
@@ -4738,13 +4758,15 @@
                         "on": "$~Afficher le mot de passe",
                         "off": "$~Masquer le mot de passe"
                     }
-                }
+                },
+                "subtitle": "$~Enregistrez, collaborez et partagez"
             },
             "join": {
                 "header": "$~Rejoindre",
                 "prompt": {
-                    "username": "$~Vous souhaitez créer un compte ? Tout d'abord, choisissez un *nom d'utilisateur*. Il doit comporter au moins 5 caractères, ne peut pas être une adresse e-mail et ne doit pas contenir votre nom ou d'autres informations permettant de vous identifier.",
-                    "password": "$~Choisissez un mot de passe comportant au moins *10 caractères*. Saisissez-le à nouveau pour vous assurer que vous l'avez tapé correctement et conservez-le dans un endroit sûr, comme un gestionnaire de mots de passe. *Il n'existe aucun moyen de récupérer votre compte* si vous le perdez, car nous ne collectons pas d'informations de contact."
+                    "create": "$~Créez un compte pour enregistrer vos projets, collaborer avec d'autres et partager votre travail.",
+                    "username": "$~Les noms d'utilisateur doivent comporter au moins /5 caractères/, ne peuvent pas être une adresse e-mail et ne doivent pas contenir votre nom ou d'autres informations d'identification.",
+                    "password": "$~Les mots de passe doivent comporter au moins /10 caractères/. Tapez-les deux fois et notez-les dans un endroit sûr, comme un gestionnaire de mots de passe. *Il n'y a aucun moyen de récupérer votre compte* si vous le perdez, car nous ne collectons pas d'informations de contact."
                 }
             },
             "rights": {
@@ -4788,6 +4810,120 @@
                     "$~Si 2 400 personnes donnaient 25 $ US par an, cela couvrirait nos coûts actuels, et tout excédent servirait à rémunérer davantage d’étudiants et d’enseignants.",
                     "$~Pouvez-vous faire partie de ces 2 400 personnes ? Si c'est le cas, voici notre lien vers le don à l'Université de Washington :"
                 ]
+            },
+            "teach": {
+                "header": "$~Enseigner",
+                "prompt": {
+                    "none": "$~Bienvenue professeur ! Créez une classe pour configurer et gérer les comptes étudiants et les galeries de projets.",
+                    "some": "$~Bienvenue professeur ! Gérez vos cours ou créez-en un nouveau."
+                },
+                "error": {
+                    "offline": "$~Nous ne sommes pas en mesure de vérifier votre statut d'enseignant.",
+                    "login": "$~Vous devez être connecté pour gérer les cours.",
+                    "teacher": "$~Vous devez disposer des privilèges d'enseignant pour créer et gérer des classes. Remplissez ce formulaire et faisons connaissance !"
+                },
+                "link": {
+                    "request": "$~Demander des privilèges d'enseignant",
+                    "new": "$~Créer une classe"
+                }
+            },
+            "newclass": {
+                "header": "$~Nouvelle classe",
+                "subheader": {
+                    "class": "$~Votre classe",
+                    "students": "$~Vos étudiants",
+                    "credentials": "$~Noms d'utilisateur et mots de passe",
+                    "submit": "$~Soumettre"
+                },
+                "prompt": {
+                    "start": "$~Créer une classe avec des comptes générés pour tous les élèves de votre classe et vous permettre de créer des galeries auxquelles tous vos élèves peuvent ajouter des projets. Si les élèves ont déjà des comptes, vous pouvez les ajouter ultérieurement.",
+                    "review": "$~Vérifiez les noms d'utilisateur et les mots de passe que nous avons créés. Voulez-vous les *modifier* avant de continuer ? Si vous le faites, vous ne pourrez pas modifier les informations sur les étudiants ci-dessus.",
+                    "ready": "$~Faites-nous savoir quand vous serez prêt à générer vos identifiants ci-dessus. Vous pourrez les modifier après l'avoir fait.",
+                    "pending": "$~Génération de noms d'utilisateur et de mots de passe...",
+                    "submit": "$~Prêt à soumettre votre demande ? Dès que votre demande sera acceptée, vous recevrez un téléchargement de ces informations. Les mots de passe ne sont pas récupérables, alors conservez-les dans un endroit sûr.",
+                    "submitting": "$~Demande de nouveaux comptes avec les noms d'utilisateur et mots de passe ci-dessus...",
+                    "download": "$~Votre cours est prêt ! Vous devriez voir un téléchargement des données de vos élèves dans votre dossier de téléchargement. *Les mots de passe ne sont pas récupérables*, alors conservez ce fichier dans un endroit sûr !"
+                },
+                "field": {
+                    "name": {
+                        "description": "$~nom de la classe",
+                        "placeholder": "$~un nom court"
+                    },
+                    "description": {
+                        "description": "$~description",
+                        "placeholder": "$~une description de votre classe, pour vous et vos élèves."
+                    },
+                    "existing": {
+                        "label": "$~étudiants avec comptes",
+                        "prompt": "$~Certains de vos élèves possèdent-ils déjà un compte Wordplay ? Ajoutez-les ici."
+                    },
+                    "metadata": {
+                        "description": "$~informations pour les étudiants",
+                        "placeholder": "$~par exemple, carte d'étudiant, nom de famille, prénom",
+                        "prompt": "$~Vous souhaitez créer de nouveaux comptes pour les élèves ? Fournissez *toutes les informations* sur les élèves, une par ligne, séparées par des virgules. Il peut s'agir de noms de famille, de prénoms, de numéros d'élèves ou d'autres détails distinctifs. Nous les utiliserons pour générer des noms d'utilisateur que vous pourrez modifier ci-dessous, ce qui vous aidera à associer les noms d'utilisateur aux apprenants."
+                    },
+                    "words": {
+                        "description": "$~mots à utiliser dans les mots de passe",
+                        "placeholder": "$~par exemple, chat, point, rat...",
+                        "prompt": "$~Fournissez au moins *25 mots* et générez au hasard des mots de passe de 2 à 3 mots faciles à retenir. Choisissez des mots que vos élèves connaissent ou demandez-leur de réfléchir à des mots. Plus c'est aléatoire, plus c'est sûr !"
+                    },
+                    "generate": {
+                        "label": "$~générer",
+                        "tip": "$~Créez des noms d’utilisateur et des mots de passe en fonction des informations ci-dessus."
+                    },
+                    "edit": {
+                        "label": "$~modifier",
+                        "tip": "$~modifier les informations sur les étudiants générées"
+                    },
+                    "submit": {
+                        "label": "$~créer une classe",
+                        "tip": "$~Créez une nouvelle classe avec ces informations."
+                    }
+                },
+                "error": {
+                    "duplicates": "$~Il y a des entrées en double dans les informations sur les étudiants.",
+                    "columns": "$~Assurez-vous que chaque élève dispose du même nombre de colonnes.",
+                    "generate": "$~Impossible de créer des noms d'utilisateur uniques.",
+                    "taken": "$~Un ou plusieurs noms d'utilisateur ci-dessus sont déjà pris",
+                    "limit": "$~Vous ne pouvez pas créer une classe de plus de 35 étudiants à la fois.",
+                    "words": "$~Fournissez au moins 25 mots.",
+                    "account": "$~Impossible de créer certains comptes.",
+                    "generic": "$~Nous n'avons pas pu créer la classe. Voici quelques informations pour aider les développeurs à comprendre ce qui s'est passé."
+                }
+            },
+            "class": {
+                "header": "$~Classe",
+                "subheader": {
+                    "teachers": "$~Enseignants",
+                    "students": "$~Étudiants",
+                    "galleries": "$~Galeries"
+                },
+                "prompt": {
+                    "gallery": "$~Créez une galerie pour votre classe afin d'organiser un devoir ou un projet. Tous les enseignants du projet seront les conservateurs de la galerie et tous les élèves les créateurs de la galerie.",
+                    "delete": "$~La suppression de cette classe supprimera définitivement les informations sur la classe, mais ses projets, ses galeries ou ses comptes étudiants."
+                },
+                "field": {
+                    "name": {
+                        "description": "$~nom de la classe",
+                        "placeholder": "$~nom"
+                    },
+                    "description": {
+                        "description": "$~description de la classe",
+                        "placeholder": "$~description"
+                    },
+                    "newteacher": {
+                        "placeholder": "$~email ou nom d'utilisateur",
+                        "description": "$~e-mail ou nom d'utilisateur du créateur à qui vous souhaitez donner accès à cette classe en tant qu'enseignant"
+                    },
+                    "addteacher": "$~Ajouter un enseignant à cette classe",
+                    "delete": {
+                        "tip": "$~Supprimez cette classe pour toujours.",
+                        "label": "$~Supprimer cette classe"
+                    }
+                },
+                "error": {
+                    "notfound": "$~Nous n'avons pas pu trouver ce cours ou vous n'avez pas la permission de le consulter."
+                }
             }
         },
         "edit": {
@@ -4808,6 +4944,60 @@
         "template": {
             "unwritten": "$~À déterminer",
             "unparsable": "$~Modèle non analysable : $1"
+        },
+        "collaborate": {
+            "label": "$~collaborer",
+            "role": {
+                "owner": "$~propriétaire",
+                "collaborators": "$~collaborateurs",
+                "curators": "$~conservateurs"
+            },
+            "field": {
+                "message": {
+                    "description": "$~Le message de discussion à soumettre",
+                    "placeholder": "$~Tapez un message"
+                }
+            },
+            "button": {
+                "submit": {
+                    "label": "$~Envoyer",
+                    "tip": "$~Envoyez un message à vos collaborateurs"
+                },
+                "start": {
+                    "label": "$~Démarrer une discussion",
+                    "tip": "$~Commencez une discussion avec vous-même ou avec d’autres."
+                },
+                "delete": "$~supprimer ce message"
+            },
+            "error": {
+                "unowned": "$~Ce projet n'a pas de propriétaire, il ne peut donc pas avoir de chat.",
+                "offline": "$~Impossible de charger ce chat.",
+                "empty": "$~Aucun message.",
+                "deleted": "$~Ce message a été supprimé."
+            },
+            "prompt": {
+                "solo": "$~Discutez avec vous-même ou ajoutez un collaborateur, qui peut éditer et discuter.",
+                "owner": "$~Les collaborateurs peuvent éditer ce projet et en discuter.",
+                "collaborator": "$~Vous êtes un collaborateur. Vous pouvez éditer ce projet et en discuter.",
+                "curator": "$~Vous êtes curateur de la galerie de ce projet. Vous pouvez éditer ce projet et en discuter."
+            }
+        },
+        "checkpoints": {
+            "label": {
+                "now": "$~maintenant",
+                "history": "$~restaurer",
+                "restore": "$~Ceci est une version précédente de ce projet.",
+                "ago": "$~1 $ il y a 2 $"
+            },
+            "button": {
+                "clear": "$~supprimer l'historique",
+                "select": "$~voir cette version",
+                "checkpoint": "$~enregistrer cette version du projet",
+                "back": "$~revenir à la version précédente",
+                "forward": "$~revenir à la version suivante",
+                "restore": "$~restaurer cette version",
+                "now": "$~revenir à la version actuelle"
+            }
         }
     },
     "moderation": {

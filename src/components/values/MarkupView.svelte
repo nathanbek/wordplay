@@ -1,11 +1,14 @@
-<svelte:options immutable={true} />
-
 <script lang="ts">
     import type MarkupValue from '@values/MarkupValue';
-    import MarkupHTMLView from '../concepts/MarkupHTMLView.svelte';
+    import SymbolView from './SymbolView.svelte';
+    import Sym from '@nodes/Sym';
 
-    export let value: MarkupValue;
-    export let inline = true;
+    interface Props {
+        value: MarkupValue;
+        inline?: boolean;
+    }
+
+    let { value, inline = true }: Props = $props();
 </script>
 
-<MarkupHTMLView markup={value.markup} {inline} />
+<SymbolView symbol={value.markup.toWordplay()} type={Sym.Words} />

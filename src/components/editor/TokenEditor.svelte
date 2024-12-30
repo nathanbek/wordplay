@@ -1,20 +1,31 @@
 <script lang="ts">
     import TextField from '@components/widgets/TextField.svelte';
-    import type Project from '@models/Project';
+    import type Project from '@db/projects/Project';
     import Token from '@nodes/Token';
     import { getCaret, getEditor } from '@components/project/Contexts';
     import { Projects } from '@db/Database';
     import { tick } from 'svelte';
     import setKeyboardFocus from '@components/util/setKeyboardFocus';
 
-    export let token: Token;
-    export let project: Project;
-    export let text: string;
-    export let placeholder: string;
-    export let validator: ((text: string) => boolean) | undefined;
-    export let creator: (text: string) => Token | [Token, Project] | undefined;
+    interface Props {
+        token: Token;
+        project: Project;
+        text: string;
+        placeholder: string;
+        validator: ((text: string) => boolean) | undefined;
+        creator: (text: string) => Token | [Token, Project] | undefined;
+    }
 
-    let view: HTMLInputElement | undefined = undefined;
+    let {
+        token,
+        project,
+        text = $bindable(),
+        placeholder,
+        validator,
+        creator,
+    }: Props = $props();
+
+    let view: HTMLInputElement | undefined = $state(undefined);
     const caret = getCaret();
     const editor = getEditor();
 
@@ -103,7 +114,7 @@
 
 <TextField
     bind:text
-    id={token.id}
+    data={token.id}
     bind:view
     classes={['token-editor']}
     placeholder={placeholder ?? ''}

@@ -1,3 +1,14 @@
+<script module lang="ts">
+    export type GalleriesPageText = {
+        /** How to describe galleries of projects */
+        header: string;
+        /** Explanation for the galleries page */
+        prompt: string;
+        /** The subheader for the examples */
+        examples: string;
+    };
+</script>
+
 <script lang="ts">
     import Header from '@components/app/Header.svelte';
     import Writing from '@components/app/Writing.svelte';
@@ -16,19 +27,19 @@
         startAfter,
     } from 'firebase/firestore';
     import { firestore } from '../../db/firebase';
-    import type { SerializedGallery } from '../../models/Gallery';
-    import Gallery, { upgradeGallery } from '../../models/Gallery';
+    import type { SerializedGallery } from '../../db/galleries/Gallery';
+    import Gallery, { upgradeGallery } from '../../db/galleries/Gallery';
     import GalleryPreview from '../../components/app/GalleryPreview.svelte';
     import Spinning from '../../components/app/Spinning.svelte';
     import Button from '../../components/widgets/Button.svelte';
-    import { GalleriesCollection } from '../../db/GalleryDatabase';
+    import { GalleriesCollection } from '../../db/galleries/GalleryDatabase.svelte';
 
-    let lastBatch: QueryDocumentSnapshot<DocumentData>;
-
-    const examples = Galleries.exampleGalleries;
+    let lastBatch = $state<QueryDocumentSnapshot<DocumentData> | undefined>(
+        undefined,
+    );
 
     /** Start the list of galleries with the example galleries. */
-    let loadedGalleries: Gallery[] = [];
+    let loadedGalleries: Gallery[] = $state([]);
 
     onMount(async () => {
         nextBatch();
@@ -43,14 +54,14 @@
                   orderBy('featured'),
                   orderBy('id'),
                   startAfter(lastBatch),
-                  limit(5)
+                  limit(5),
               )
             : query(
                   collection(firestore, GalleriesCollection),
                   where('public', '==', true),
                   orderBy('featured'),
                   orderBy('id'),
-                  limit(5)
+                  limit(5),
               );
         const documentSnapshots = await getDocs(first);
 
@@ -63,13 +74,16 @@
             ...documentSnapshots.docs.map(
                 (snap) =>
                     new Gallery(
-                        upgradeGallery(snap.data() as SerializedGallery)
-                    )
+                        upgradeGallery(snap.data() as SerializedGallery),
+                    ),
             ),
         ];
     }
 
-    $: galleries = [...$examples, ...loadedGalleries];
+    let galleries = $derived([
+        ...Galleries.getExampleGalleries(),
+        ...loadedGalleries,
+    ]);
 </script>
 
 <svelte:head>

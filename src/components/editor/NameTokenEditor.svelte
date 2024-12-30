@@ -1,17 +1,21 @@
 <script lang="ts">
     import Sym from '@nodes/Sym';
     import { toTokens } from '@parser/toTokens';
-    import type Project from '@models/Project';
+    import type Project from '@db/projects/Project';
     import NameToken from '@nodes/NameToken';
     import type Token from '@nodes/Token';
     import TokenTextEditor from './TokenEditor.svelte';
     import { getCaret } from '@components/project/Contexts';
     import Name from '@nodes/Name';
 
-    export let name: Token;
-    export let project: Project;
-    export let text: string;
-    export let placeholder: string;
+    interface Props {
+        name: Token;
+        project: Project;
+        text: string;
+        placeholder: string;
+    }
+
+    let { name, project, text, placeholder }: Props = $props();
 
     const caret = getCaret();
 </script>

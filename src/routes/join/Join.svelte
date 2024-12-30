@@ -1,3 +1,19 @@
+<script module lang="ts">
+    export type JoinPageText = {
+        /** The account creation header */
+        header: string;
+        /** Requests for information on the account creation page */
+        prompt: {
+            /** Prompt to create an account */
+            create: string;
+            /** Username rules */
+            username: string;
+            /** Password rules and warnings */
+            password: string;
+        };
+    };
+</script>
+
 <script lang="ts">
     import TextField from '@components/widgets/TextField.svelte';
     import LoginForm from '../login/LoginForm.svelte';
@@ -6,28 +22,31 @@
     import { createUserWithEmailAndPassword } from 'firebase/auth';
     import { auth, functions } from '@db/firebase';
     import getAuthErrorDescription from '../login/getAuthErrorDescription';
-    import { Creator } from '@db/CreatorDatabase';
+    import { Creator } from '@db/creators/CreatorDatabase';
     import Spinning from '@components/app/Spinning.svelte';
     import Button from '@components/widgets/Button.svelte';
-    import Header from '@components/app/Header.svelte';
-    import isValidUsername from '@db/isValidUsername';
+    import isValidUsername from '@db/creators/isValidUsername';
     import { goto } from '$app/navigation';
-    import { httpsCallable } from 'firebase/functions';
     import Feedback from '@components/app/Feedback.svelte';
     import MarkupHtmlView from '@components/concepts/MarkupHTMLView.svelte';
     import Toggle from '@components/widgets/Toggle.svelte';
+    import Header from '@components/app/Header.svelte';
+    import { usernameAccountExists } from '../../db/creators/accountExists';
 
-    let username = '';
-    let password = '';
-    let password2 = '';
-    let available: undefined | boolean = undefined;
-    let reveal = false;
+    let username = $state('');
+    let password = $state('');
+    let password2 = $state('');
+    let available: undefined | boolean = $state(undefined);
+    let reveal = $state(false);
 
     /** When true, login submission button shows loading spinner */
-    let loading = false;
+    let loading = $state(false);
+
+    /** When true, checking if username exists */
+    let checkingUsername = $state(false);
 
     /** Feedback to show in the login form */
-    let feedback: string | undefined = undefined;
+    let feedback: string | undefined = $state(undefined);
 
     function createAccountFormComplete() {
         return (
@@ -62,21 +81,17 @@
             }
         }
     }
-
-    async function checkUsername(name: string) {
-        if (functions === undefined) return;
-        const wordplayEmail = Creator.usernameEmail(name);
-
-        // Get missing info.
-        const emailExists = httpsCallable<string>(functions, 'emailExists');
-        available = (await emailExists(wordplayEmail)).data === false;
-    }
 </script>
 
 <Header>{$locales.get((l) => l.ui.page.join.header)}</Header>
 
 <LoginForm submit={createAccount} {feedback}>
     <MarkupHtmlView
+        markup={$locales.get((l) => l.ui.page.join.prompt.create)}
+    />
+
+    <MarkupHtmlView
+        note
         markup={$locales.get((l) => l.ui.page.join.prompt.username)}
     />
 
@@ -91,14 +106,23 @@
             bind:text={username}
             editable={!loading}
             validator={(text) => isValidUsername(text)}
-            done={(text) => checkUsername(text)}
+            changed={() => {
+                if (available === false) available = undefined;
+            }}
+            dwelled={async (text) => {
+                checkingUsername = true;
+                available = (await usernameAccountExists(text)) === false;
+                checkingUsername = false;
+            }}
         />
     </p>
-    {#if available === false}
+    {#if checkingUsername}<Spinning></Spinning>
+    {:else if available === false}
         <Feedback>This username is taken.</Feedback>
     {/if}
 
     <MarkupHtmlView
+        note
         markup={$locales.get((l) => l.ui.page.join.prompt.password)}
     />
     <p class="center">

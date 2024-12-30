@@ -9,13 +9,14 @@ import type { DefinitePose } from './Pose';
 import type Pose from './Pose';
 import type Sequence from './Sequence';
 import { Form, toForm } from './Form';
-import type Project from '../models/Project';
+import type Project from '../db/projects/Project';
 import type Value from '../values/Value';
 import type { NameGenerator } from './Stage';
 import { getOutputInput } from './Valued';
 import { getStyle } from './toOutput';
 import Place from './Place';
 import type Locales from '../locale/Locales';
+import type { SupportedFace } from '@basis/Fonts';
 
 export function createShapeType(locales: Locales) {
     return toStructure(`
@@ -149,6 +150,10 @@ export default class Shape extends Output {
 
     getEntryAnimated() {
         return this.entering !== undefined ? [this] : [];
+    }
+
+    gatherFaces(set: Set<SupportedFace>): Set<SupportedFace> {
+        return set;
     }
 }
 

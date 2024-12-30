@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
     import type Source from '@nodes/Source';
     import { getConflicts } from './Contexts';
     import Glyphs from '../../lore/Glyphs';
@@ -7,23 +6,28 @@
     import { locales } from '../../db/Database';
     import Emoji from '@components/app/Emoji.svelte';
     import Templates from '@concepts/Templates';
-    import type Project from '@models/Project';
+    import type Project from '@db/projects/Project';
     import Context from '@nodes/Context';
 
-    export let project: Project;
-    export let source: Source;
-    export let expanded: boolean;
+    interface Props {
+        project: Project;
+        source: Source;
+        expanded: boolean;
+        toggle: () => void;
+    }
+
+    let { project, source, expanded, toggle }: Props = $props();
 
     let conflicts = getConflicts();
 
-    const dispatch = createEventDispatcher();
-
     // The number of conflicts is the number of nodes in the source involved in conflicts
-    let primaryCount = 0;
-    let secondaryCount = 0;
-    $: {
-        primaryCount = 0;
-        secondaryCount = 0;
+    let primaryCount = $state(0);
+    let secondaryCount = $state(0);
+
+    // Derive counts from sources.
+    $effect(() => {
+        let newPrimaryCount = 0;
+        let newSecondaryCount = 0;
         if ($conflicts) {
             for (const conflict of $conflicts) {
                 const nodes = conflict.getConflictingNodes(
@@ -31,22 +35,25 @@
                     Templates,
                 );
                 if (source.has(nodes.primary.node)) {
-                    if (!conflict.isMinor()) primaryCount++;
-                    else secondaryCount++;
+                    if (!conflict.isMinor()) newPrimaryCount++;
+                    else newSecondaryCount++;
                 } else if (
                     nodes.secondary !== undefined &&
                     source.has(nodes.secondary.node)
                 )
-                    secondaryCount++;
+                    newSecondaryCount++;
             }
         }
-    }
+
+        primaryCount = newPrimaryCount;
+        secondaryCount = newSecondaryCount;
+    });
 </script>
 
 <Toggle
     tips={$locales.get((l) => l.ui.tile.toggle.show)}
     on={expanded}
-    toggle={() => dispatch('toggle')}
+    {toggle}
 >
     {#if primaryCount > 0}<span class="count primary">{primaryCount}</span>{/if}
     {#if secondaryCount > 0}<span class="count secondary">{secondaryCount}</span
@@ -54,7 +61,7 @@
     {#if primaryCount === 0 && secondaryCount === 0}<Emoji
             >{Glyphs.Program.symbols}</Emoji
         >{/if}
-    {$locales.getName(source.names)}
+    {#if !expanded}{$locales.getName(source.names)}{/if}
 </Toggle>
 
 <style>

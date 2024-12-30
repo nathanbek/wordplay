@@ -18,7 +18,7 @@ import type Sequence from './Sequence';
 import { PX_PER_METER, sizeToPx } from './outputToCSS';
 import { getBind } from '@locale/getBind';
 import { CSSFallbackFaces, toNumber, type NameGenerator } from './Stage';
-import type Project from '../models/Project';
+import type Project from '../db/projects/Project';
 import type { DefinitePose } from './Pose';
 import StructureValue from '../values/StructureValue';
 import { getOutputInput } from './Valued';
@@ -172,10 +172,6 @@ export default class Phrase extends Output {
         this.direction = direction;
         this.matter = matter;
         this.aura = aura;
-
-        // Make sure this font is loaded. This is a little late -- we could do some static analysis
-        // and try to determine this in advance -- but anything can compute a font name. Maybe an optimization later.
-        if (this.face) Fonts.loadFace(this.face);
     }
 
     find(check: (output: Output) => boolean): Output | undefined {
@@ -352,7 +348,7 @@ export default class Phrase extends Output {
         const textOrDoc = this.getLocalizedTextOrDoc(locales);
         return textOrDoc instanceof TextLang
             ? textOrDoc.text
-            : textOrDoc?.toText() ?? '';
+            : (textOrDoc?.toText() ?? '');
     }
 
     getDescription(locales: Locales) {
@@ -389,6 +385,11 @@ export default class Phrase extends Output {
         return preferred instanceof Markup
             ? preferred.getRepresentativeText()
             : preferred.text;
+    }
+
+    gatherFaces(set: Set<SupportedFace>): Set<SupportedFace> {
+        if (this.face) set.add(this.face);
+        return set;
     }
 
     toString() {

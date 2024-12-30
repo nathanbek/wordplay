@@ -1,7 +1,7 @@
 <script lang="ts">
     import TextField from '../widgets/TextField.svelte';
     import type Evaluate from '../../nodes/Evaluate';
-    import type Project from '@models/Project';
+    import type Project from '@db/projects/Project';
     import NumberValue from '@values/NumberValue';
     import NumberLiteral from '@nodes/NumberLiteral';
     import Unit from '@nodes/Unit';
@@ -13,11 +13,15 @@
     import type Bind from '../../nodes/Bind';
     import setKeyboardFocus from '@components/util/setKeyboardFocus';
 
-    export let project: Project;
-    export let velocity: Evaluate;
-    export let editable: boolean;
+    interface Props {
+        project: Project;
+        velocity: Evaluate;
+        editable: boolean;
+    }
 
-    let views: HTMLInputElement[] = [];
+    let { project, velocity, editable }: Props = $props();
+
+    let views: HTMLInputElement[] = $state([]);
 
     function valid(val: string) {
         const [num] = NumberValue.fromUnknown(val);

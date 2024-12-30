@@ -1,7 +1,7 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { Projects, locales } from '@db/Database';
-    import type Gallery from '../../models/Gallery';
+    import type Gallery from '../../db/galleries/Gallery';
     import Link from './Link.svelte';
     import ProjectPreview from './ProjectPreview.svelte';
     import Spinning from './Spinning.svelte';
@@ -9,19 +9,26 @@
     import { browser } from '$app/environment';
     import MarkupHtmlView from '../concepts/MarkupHTMLView.svelte';
     import { onMount } from 'svelte';
-    import type Project from '@models/Project';
+    import type Project from '@db/projects/Project';
 
-    export let gallery: Gallery;
-    /** How many milliseconds to wait to start updating */
-    export let delay: number;
+    interface Props {
+        gallery: Gallery;
+        /** How many milliseconds to wait to start updating */
+        delay: number;
+    }
 
-    let index = 0;
-    $: projectID = gallery.getProjects()[0];
+    let { gallery, delay }: Props = $props();
+
+    let index = $state(0);
+    let projectID = $state<string | undefined>(gallery.getProjects()[0]);
+
     /** Null means loading */
-    let project: Project | null | undefined = null;
+    let project: Project | null | undefined = $state(null);
     let timeoutID: NodeJS.Timeout;
 
-    $: description = gallery.getDescription($locales).split('\n').join('\n\n');
+    let description = $derived(
+        gallery.getDescription($locales).split('\n').join('\n\n'),
+    );
 
     async function loadNext() {
         index = (index + 1) % gallery.getProjects().length;
@@ -62,7 +69,7 @@
         </div>
     {/if}
     <div class="description">
-        <Subheader
+        <Subheader compact
             ><Link nowrap to={gallery.getLink()}
                 >{gallery.getName($locales)}</Link
             >

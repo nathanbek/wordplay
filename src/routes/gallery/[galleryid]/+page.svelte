@@ -1,3 +1,42 @@
+<script module lang="ts">
+    import type { DialogText } from '@locale/UITexts';
+    import type { ConfirmText } from '@locale/UITexts';
+    import type { FieldText } from '@locale/UITexts';
+
+    export type GalleryPageText = {
+        /** What to call a gallery by default, before it's given a name */
+        untitled: string;
+        /** What to say if the description is empty */
+        undescribed: string;
+        /** Headers on the page */
+        subheader: {
+            /** Associtaed classes header */
+            classes: DialogText;
+            /** The list of curators */
+            curators: DialogText;
+            /** The list of curators */
+            creators: DialogText;
+            /** Delete header */
+            delete: DialogText;
+        };
+        /** Confirm buttons on the gallery page */
+        confirm: {
+            /** The confirm button that deletes a source file */
+            delete: ConfirmText;
+            /** The confirm button that removes a project from a gallery */
+            remove: ConfirmText;
+        };
+        error: {
+            /** When the gallery is not known or is not public */
+            unknown: string;
+        };
+        field: {
+            name: FieldText;
+            description: FieldText;
+        };
+    };
+</script>
+
 <script lang="ts">
     import { page } from '$app/stores';
     import Feedback from '@components/app/Feedback.svelte';
@@ -12,58 +51,68 @@
     import CreatorList from '@components/project/CreatorList.svelte';
     import TextField from '@components/widgets/TextField.svelte';
     import TextBox from '@components/widgets/TextBox.svelte';
-    import type { Unsubscriber } from 'svelte/store';
-    import type Gallery from '@models/Gallery';
-    import { onDestroy } from 'svelte';
+    import type Gallery from '@db/galleries/Gallery';
     import Public from '@components/project/Public.svelte';
     import ConfirmButton from '@components/widgets/ConfirmButton.svelte';
-    import type Project from '../../../models/Project';
+    import type Project from '../../../db/projects/Project';
     import ProjectPreviewSet from '@components/app/ProjectPreviewSet.svelte';
     import AddProject from '@components/app/AddProject.svelte';
-    import { COPY_SYMBOL, EDIT_SYMBOL } from '../../../parser/Symbols';
+    import {
+        CANCEL_SYMBOL,
+        COPY_SYMBOL,
+        EDIT_SYMBOL,
+    } from '../../../parser/Symbols';
     import Spinning from '@components/app/Spinning.svelte';
+    import { getClasses, type Class } from '@db/TeacherDatabase.svelte';
+    import Link from '@components/app/Link.svelte';
 
     const user = getUser();
 
     // The current gallery being viewed. Starts at null, to represent loading state.
-    let gallery: Gallery | null | undefined = null;
+    let gallery = $state<Gallery | null | undefined>(null);
 
     // When the page changes, get the gallery store corresponding to the requested ID.
-    let galleryUnsubscribe: Unsubscriber | undefined = undefined;
-    let pageUnsubscribe = page.subscribe((context) => {
-        const galleryID = context
-            ? decodeURI(context.params.galleryid)
-            : undefined;
-        if (galleryID && !(gallery && gallery.getID() === galleryID)) {
-            // Unsubscribe from the previous gallery store.
-            if (galleryUnsubscribe) galleryUnsubscribe();
-            Galleries.getStore(galleryID).then((store) => {
-                // Found a store? Subscribe to it, updating the gallery when it changes.
-                if (store) {
-                    galleryUnsubscribe = store.subscribe((gal) => {
-                        gallery = gal;
-                    });
-                }
-                // Not found? No gallery.
-                else gallery = undefined;
-            });
-        } else gallery = undefined;
+    $effect(() => {
+        const galleryID = decodeURI($page.params.galleryid);
+        Galleries.get(galleryID).then((gal) => {
+            // Found a store? Subscribe to it, updating the gallery when it changes.
+            if (gal) gallery = gal;
+            // Not found? No gallery.
+            else gallery = undefined;
+        });
     });
 
-    onDestroy(() => pageUnsubscribe());
+    let classes = $state<Class[] | undefined>(undefined);
+    $effect(() => {
+        if (gallery) {
+            getClasses(gallery.getID()).then((matches) => (classes = matches));
+        }
+    });
 
-    $: name = gallery?.getName($locales);
-    $: description = gallery?.getDescription($locales);
-    $: editable = gallery
-        ? $user !== null && gallery.getCurators().includes($user.uid)
-        : false;
-    $: addable =
-        gallery && $user ? gallery.getCreators().includes($user.uid) : false;
+    // let galleryUnsubscribe: Unsubscriber | undefined = undefined;
+    // let pageUnsubscribe = page.subscribe((context) => {
+    //     const galleryID = context
+    //         ? decodeURI(context.params.galleryid)
+    //         : undefined;
+    //     if (galleryID && !(gallery && gallery.getID() === galleryID)) {
+    //         // Unsubscribe from the previous gallery store.
+    //         if (galleryUnsubscribe) galleryUnsubscribe();
+    //         Galleries.getStore(galleryID).then((store) => {
+    //             // Found a store? Subscribe to it, updating the gallery when it changes.
+    //             if (store) {
+    //                 galleryUnsubscribe = store.subscribe((gal) => {
+    //                     gallery = gal;
+    //                 });
+    //             }
+    //             // Not found? No gallery.
+    //             else gallery = undefined;
+    //         });
+    //     } else gallery = undefined;
+    // });
 
-    // Anytime the gallery changes, refresh the project list.
-    $: if (gallery) loadProjects();
+    // onDestroy(() => pageUnsubscribe());
 
-    let projects: Project[] | undefined = undefined;
+    let projects: Project[] | undefined = $state(undefined);
 
     async function loadProjects() {
         if (gallery === undefined || gallery === null) return;
@@ -75,6 +124,25 @@
             )
         ).filter((proj): proj is Project => proj !== undefined);
     }
+    let name = $derived(gallery?.getName($locales));
+    let description = $derived(gallery?.getDescription($locales));
+    let editable = $derived(
+        gallery
+            ? $user !== null && gallery.getCurators().includes($user.uid)
+            : false,
+    );
+    let projectsEditable = $derived(
+        $user !== null &&
+            gallery &&
+            (gallery.hasCurator($user.uid) || gallery.hasCreator($user.uid)),
+    );
+    let addable = $derived(
+        gallery && $user ? gallery.getCreators().includes($user.uid) : false,
+    );
+    // Anytime the gallery changes, refresh the project list.
+    $effect(() => {
+        if (gallery) loadProjects();
+    });
 </script>
 
 {#if gallery === null}
@@ -159,7 +227,7 @@
                 {#if projects}
                     <ProjectPreviewSet
                         set={projects}
-                        edit={editable
+                        edit={projectsEditable
                             ? {
                                   description: $locales.get(
                                       (l) =>
@@ -200,7 +268,7 @@
                                                     gallery.getID(),
                                                 )
                                               : false,
-                                      label: '⨉',
+                                      label: CANCEL_SYMBOL,
                                   }
                                 : false;
                         }}
@@ -267,6 +335,29 @@
                             : undefined}
                     removable={() => true}
                 />
+            {/if}
+
+            {#if classes}
+                <Subheader
+                    >{$locales.get(
+                        (l) => l.ui.gallery.subheader.classes.header,
+                    )}</Subheader
+                >
+                <MarkupHtmlView
+                    markup={$locales.get(
+                        (l) => l.ui.gallery.subheader.classes.explanation,
+                    )}
+                />
+
+                <ul>
+                    {#each classes as classy}
+                        <li
+                            ><Link to="/teach/class/{classy.id}"
+                                >{classy.name}</Link
+                            ></li
+                        >
+                    {/each}
+                </ul>
             {/if}
 
             {#if $user && gallery.getCurators().includes($user.uid)}

@@ -1,27 +1,31 @@
 <script lang="ts">
     import Spinning from '@components/app/Spinning.svelte';
     import Button from '@components/widgets/Button.svelte';
-    import { Creator } from '@db/CreatorDatabase';
+    import { Creator } from '@db/creators/CreatorDatabase';
     import { signInWithEmailAndPassword, type User } from 'firebase/auth';
     import TextField from '../../components/widgets/TextField.svelte';
-    import validEmail from '../../db/isValidEmail';
+    import validEmail from '../../db/creators/isValidEmail';
     import { DB, locales } from '@db/Database';
     import Feedback from '@components/app/Feedback.svelte';
     import MarkupHtmlView from '@components/concepts/MarkupHTMLView.svelte';
     import { auth } from '@db/firebase';
-    import isValidEmail from '../../db/isValidEmail';
+    import isValidEmail from '../../db/creators/isValidEmail';
     import isValidPassword from './IsValidPassword';
 
-    export let user: User;
+    interface Props {
+        user: User;
+    }
 
-    $: creator = Creator.from(user);
+    let { user }: Props = $props();
 
-    let deleteRequested = false;
-    let confirmEmail: string;
-    let password = '';
-    let deleteSubmitted = false;
-    let successfullyDeleted: boolean | undefined = undefined;
-    let deleteFeedback: string | undefined = undefined;
+    let creator = $derived(Creator.from(user));
+
+    let deleteRequested = $state(false);
+    let confirmEmail: string = $state('');
+    let password = $state('');
+    let deleteSubmitted = $state(false);
+    let successfullyDeleted: boolean | undefined = $state(undefined);
+    let deleteFeedback: string | undefined = $state(undefined);
 
     async function deleteAccount() {
         if (auth === undefined) return;
@@ -71,7 +75,7 @@
         </p>
 
         <form
-            on:submit={() =>
+            onsubmit={() =>
                 readyToDeleteAccount(confirmEmail, password)
                     ? deleteAccount()
                     : undefined}

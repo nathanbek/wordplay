@@ -7,23 +7,28 @@
     import Dialog from '@components/widgets/Dialog.svelte';
     import { Projects, Settings, locales } from '@db/Database';
     import { functions } from '@db/firebase';
-    import { getLanguageName } from '@locale/LanguageCode';
     import { SupportedLocales } from '@locale/LocaleText';
-    import type Project from '@models/Project';
-    import translateProject from '@models/translate';
+    import type Project from '@db/projects/Project';
+    import translateProject from '@db/projects/translate';
 
-    export let project: Project;
+    interface Props {
+        project: Project;
+    }
 
-    let translating: boolean = false;
-    let error: boolean = false;
-    let show: boolean;
+    let { project }: Props = $props();
 
-    $: projectLocales = project.getLocales().getLocales();
-    $: localeCount = projectLocales.length - 1;
-    $: primaryLocale = `${projectLocales[0].language}-${projectLocales[0].region}`;
-    $: allLocales = projectLocales
-        .map((l) => `${l.language}-${l.region}`)
-        .sort();
+    let translating: boolean = $state(false);
+    let error: boolean = $state(false);
+    let show: boolean = $state(false);
+
+    let projectLocales = $derived(project.getLocales().getLocales());
+    let localeCount = $derived(projectLocales.length - 1);
+    let primaryLocale = $derived(
+        `${projectLocales[0].language}-${projectLocales[0].region}`,
+    );
+    let allLocales = $derived(
+        projectLocales.map((l) => `${l.language}-${l.region}`).sort(),
+    );
 
     /** Translate the project into another language */
     async function translate(targetLocaleCode: string) {
@@ -71,10 +76,8 @@
         ),
     }}
     button={{
-        tip: $locales.get((l) => l.ui.project.button.translate),
-        label: `${getLanguageName(project.getPrimaryLanguage())}${
-            localeCount < 2 ? '' : `+${localeCount - 1}`
-        }…`,
+        tip: $locales.get((l) => l.ui.project.button.translate.tip),
+        label: `🌐 ${$locales.get((l) => l.ui.project.button.translate.label)}`,
     }}
 >
     <Subheader>{$locales.get((l) => l.ui.project.subheader.source)}</Subheader>

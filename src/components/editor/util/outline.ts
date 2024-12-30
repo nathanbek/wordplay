@@ -108,10 +108,16 @@ function getTokenRects(nodeView: HTMLElement) {
 
     // Get the rectangles of all of the tokens's text (or if a value, it's symbols).
     const tokenViews = nodeView.querySelectorAll('.token-view, .symbol');
+
+    if (tokenViews.length === 0) {
+        console.warn('No tokens or symbols found in node view');
+        console.warn(nodeView);
+    }
+
     for (const view of tokenViews) {
         if (view instanceof HTMLElement) {
             if (view.closest('.hide') === null) {
-                // Find space textAdd rects for space prior to token
+                // Add rects for space prior to token
                 const spaceViews = nodeView.querySelectorAll(
                     '.space[data-id="' +
                         view.dataset.id +

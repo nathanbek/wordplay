@@ -19,7 +19,9 @@ function LocaleHotReload() {
 
 /** @type {import('vite').UserConfig} */
 const config = {
-    plugins: [sveltekit(), LocaleHotReload()],
+    // Temporarily disabled locale hot reload for stable development
+    // Comment out the LocaleHotReload() plugin to prevent refresh loops
+    plugins: [sveltekit()], // Removed LocaleHotReload() while working on this feature
     build: { chunkSizeWarningLimit: 1600 },
 };
 
